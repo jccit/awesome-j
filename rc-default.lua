@@ -51,26 +51,28 @@ run_once({ "nm-applet -sm-disable" })
 run_once({ "compton" })
 run_once({ "wmname LG3D" }) -- Fix for java applications
 run_once({ "xautolock -time 10 -locker '/usr/share/i3lock-fancy/lock -f Meslo-LG-S-Regular -t Locked' -- scrot" })
+run_once({ "mpd" })
 -- Variable definitions
 local themes = {
     "yellow",      -- 1
-    "darkblue"     -- 2
+    "darkblue",     -- 2
+    "dark"         -- 3
 }
 -- Choose the theme
-local chosen_theme = themes[2]
+local chosen_theme = themes[3]
 -- Set false to disable titlebar
 local window_titlebar = true  
 -- Settings for dmenu prompt
-local dmenu_settings = "dmenu_run -fn 'Meslo LGS Regular-10' -i -l 10 -p 'Run:' -nb '#32302f' -nf '#a89984' -sb '#458588' -sf '#2d2d2d' -h 10 -w 800 -y 350 -x 400"
+local dmenu_settings = "dmenu_run -fn 'Hack Regular-10' -i -l 10 -p 'Run:' -nb '#32302f' -nf '#a89984' -sb '#458588' -sf '#2d2d2d' -h 10 -w 800 -y 350 -x 400"
 local rofi_settings = "rofi -show run"
 local i3lock_settings = "i3lock-fancy -f Meslo-LG-S-Regular -t 'Locked' -n -- scrot"
 local modkey       = "Mod4"
 local altkey       = "Mod1"
-local terminal     = "urxvt"
+local terminal     = "kitty"
 local editor       = os.getenv("EDITOR") or "nano"
-local gui_editor   = "gvim"
+local gui_editor   = "code"
 local browser      = "firefox"
-local guieditor    = "subl3"
+local guieditor    = "code"
 
 -- Naughty presets
 naughty.config.defaults.timeout = 5
@@ -79,7 +81,7 @@ naughty.config.defaults.position = "top_right"
 naughty.config.defaults.margin = 8
 naughty.config.defaults.gap = 1
 naughty.config.defaults.ontop = true
-naughty.config.defaults.font = "Meslo LGS Regular 10"
+naughty.config.defaults.font = "Hack Regular 10"
 naughty.config.defaults.icon = nil
 naughty.config.defaults.icon_size = 32
 naughty.config.defaults.fg = beautiful.fg_tooltip
@@ -202,17 +204,17 @@ awful.util.mymainmenu = freedesktop.menu.build({
 
 -- Screen
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
-screen.connect_signal("property::geometry", function(s)
-    -- Wallpaper
-    if beautiful.wallpaper then
-        local wallpaper = beautiful.wallpaper
-        -- If wallpaper is a function, call it with the screen
-        if type(wallpaper) == "function" then
-            wallpaper = wallpaper(s)
-        end
-        gears.wallpaper.maximized(wallpaper, s, true)
-    end
-end)
+-- screen.connect_signal("property::geometry", function(s)
+--     -- Wallpaper
+--     if beautiful.wallpaper then
+--         local wallpaper = beautiful.wallpaper
+--         -- If wallpaper is a function, call it with the screen
+--         if type(wallpaper) == "function" then
+--             wallpaper = wallpaper(s)
+--         end
+--         gears.wallpaper.maximized(wallpaper, s, true)
+--     end
+-- end)
 -- Create a wibox for each screen and add it
 awful.screen.connect_for_each_screen(function(s) beautiful.connect(s) end)
 
@@ -749,14 +751,6 @@ client.connect_signal("request::titlebars", function(c)
         },
         layout = wibox.layout.align.horizontal
     }
-end)
-
--- Enable sloppy focus, so that focus follows mouse.
-client.connect_signal("mouse::enter", function(c)
-    if awful.layout.get(c.screen) ~= awful.layout.suit.magnifier
-        and awful.client.focus.filter(c) then
-        client.focus = c
-    end
 end)
 
 -- No border for maximized clients
